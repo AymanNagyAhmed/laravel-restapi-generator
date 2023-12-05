@@ -53,7 +53,7 @@ If you discover any security related issues, please email aymannagy.ahmed@gmail.
 
 ## Credits
 
-- [Bhavin Gajjar](https://github.com/AymanNagyAhmed)
+- [Ayman Nagy Ahmed](https://github.com/AymanNagyAhmed)
 
 ## License
 
