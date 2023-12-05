@@ -1,0 +1,106 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Helpers\CollectionHelper;
+use App\Http\Controllers\Controller;
+use App\Traits\Api\ApiGeneralResponse;
+use App\{{modelNameSpace}};
+use App\Http\Resources\{{modelName}}Resource;
+use App\Http\Resources\{{modelName}}Collection;
+use App\Http\Requests\Api\Get{{modelName}}Request;
+use App\Http\Requests\Api\Store{{modelName}}Request;
+use App\Http\Requests\Api\Update{{modelName}}Request;
+use App\Http\Requests\Api\Delete{{modelName}}Request;
+
+class {{modelName}}Controller extends Controller
+{
+
+    use ApiGeneralResponse;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $result = Country::query()->get();
+        return $this->responseSuccess(CollectionHelper::resourcePaginate($result, {{modelName}}Resource::class, 5));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Store{{modelName}}Request $request
+     *
+     * @return JsonResponse
+     */
+    public function store(Store{{modelName}}Request $request): JsonResponse
+    {
+        $requestData = $request->all();
+        try {
+            ${{modelNameCamel}} = {{modelName}}::create($requestData);
+            return $this->returnSuccess([
+                'message' => 'Updated Successfully',
+                '${{modelNameCamel}}' => {{modelNameCamel}}Resource::make(${{modelNameCamel}})
+            ]);
+        } catch (Exception $e) {
+            return $this->responseError($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     * @param Get{{modelName}}Request $request
+     * @param {{modelName}} ${{modelNameCamel}}
+     *
+     * @return JsonResponse
+     */
+    public function show(Get{{modelName}}Request $request, {{modelName}} ${{modelNameCamel}}): JsonResponse
+    {
+        return $this->responseSuccess({{modelName}}Resource::make(${{modelNameCamel}}));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param {{modelName}} ${{modelNameCamel}}
+     *
+     * @return JsonResponse
+     */
+    public function update(Update{{modelName}}Request $request, {{modelName}} ${{modelNameCamel}}): JsonResponse
+    {
+        $requestData = $request->all();
+        try {
+            ${{modelNameCamel}}->update($requestData);
+            return $this->responseSuccess(['message' => 'Updated Successfully']);
+        } catch (Exception $e) {
+            return $this->responseError($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     * @param Delete{{modelName}}Request $request
+     * @param {{modelName}} ${{modelNameCamel}}
+     *
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function destroy(Delete{{modelName}}Request $request, {{modelName}} ${{modelNameCamel}}): JsonResponse
+    {
+        try {
+            ${{modelNameCamel}}->delete();
+            return $this->responseSuccess(['success' => 'Deleted successfully']);
+        } catch (Exception $e) {
+            return $this->responseError($e->getMessage(), 500);
+        }
+    }
+}

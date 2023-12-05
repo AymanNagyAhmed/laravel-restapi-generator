@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Traits\Api;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response;
+
+trait ApiGeneralResponse
+{
+    /**
+     * @param $error
+     * @param $code
+     * @return JsonResponse
+     */
+    public function responseError($error, $code): JsonResponse
+    {
+        return new JsonResponse([
+            'status'    => false,
+            'message'   => 'no',
+            'code'      => $code,
+            'errors'    =>  Arr::flatten([$error]),
+        ],$code);
+    }
+
+    /**
+     * @param $data
+     * @param int $code
+     * @return JsonResponse
+     */
+    public function responseSuccess($data , int $code = Response::HTTP_OK): JsonResponse
+    {
+        return new JsonResponse([
+            'status'    => true,
+            'message'   => 'ok',
+            'code'      => $code,
+            'data'      => $data,
+        ],$code);
+    }
+}

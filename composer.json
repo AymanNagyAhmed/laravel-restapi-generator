@@ -1,0 +1,60 @@
+{
+    "name": "lararest/restapi-generator",
+    "keywords": [
+        "aymannagy",
+        "apiwithrequest",
+        "restapi-generator",
+        "laravel-api-resources",
+        "laravel-api-requests",
+        "api generator",
+        "laravelrest restapi generator",
+        "laravelrest"
+    ],
+    "description": "A laravel package to generate Restful API with Requestes & Resources",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ayman Nagy",
+            "email": "aymannagy.ahmed@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.2|^8.0|^8.1|^8.3",
+        "illuminate/support": "5.8.*|^6.0|^7.0|^8.0|^9.0|^10.0|^10.34.2"
+    },
+    "require-dev": {
+        "orchestra/testbench": "8.16.*",
+        "phpunit/phpunit": "^10.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "lararest\\RestApiGenerator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "lararest\\RestApiGenerator\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "homepage": "https://github.com/AymanNagyAhmed/laravel-restapi-generator",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "lararest\\RestApiGenerator\\RestApiGeneratorServiceProvider"
+            ],
+            "aliases": {
+                "RestApiGenerator": "lararest\\RestApiGenerator\\RestApiGeneratorFacade"
+            }
+        }
+    }
+}

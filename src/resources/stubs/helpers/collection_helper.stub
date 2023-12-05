@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Helpers;
+
+use Illuminate\Support\Collection;
+use Illuminate\Container\Container;
+use Illuminate\Pagination\{Paginator, LengthAwarePaginator};
+use Illuminate\Contracts\Container\BindingResolutionException;
+
+class CollectionHelper
+{
+    /**
+     * @param Collection $collection
+     * @param $pageSize
+     * @return mixed|object
+     * @throws BindingResolutionException
+     */
+    public static function simplePaginate(Collection $collection, $pageSize): mixed
+    {
+        $page = Paginator::resolveCurrentPage();
+        $total = $collection->count();
+
+        return self::paginator($collection->forPage($page, $pageSize), $total, $pageSize, $page, [
+            'path' => Paginator::resolveCurrentPath(),
+            'pageName' => 'page',
+        ]);
+    }
+
+    /**
+     * @param $collection
+     * @param $resource
+     * @param $pageSize
+     * @return mixed|object
+     * @throws BindingResolutionException
+     */
+    public static function resourcePaginate($collection, $resource, $pageSize): mixed
+    {
+        $page =  Paginator::resolveCurrentPage('page');
+        $total = $collection->count();
+
+        return self::paginator($resource::collection($collection->forPage($page, $pageSize)), $total, $pageSize, $page, [
+            'path' => Paginator::resolveCurrentPath(),
+            'pageName' => 'page',
+        ]);
+    }
+
+
+    /**
+     * @param $collection
+     * @param $resource
+     * @param $pageSize
+     * @param string $pageName
+     * @param $page
+     * @param $request
+     * @return mixed
+     * @throws BindingResolutionException
+     */
+    public static function fullResourcePaginate($collection, $resource, $pageSize, string $pageName = 'page', $page = null, $request): mixed
+    {
+        $page = $page ?: Paginator::resolveCurrentPage($pageName);
+        $total = $collection->count();
+
+        return self::paginator($resource::collection($collection->forPage($page, $pageSize)), $total, $pageSize, $page, [
+            'path' => Paginator::resolveCurrentPath(),
+            'pageName' => $pageName,
+        ])->appends($request->all());
+    }
+
+    /**
+     * @param $items
+     * @param int $total
+     * @param int $perPage
+     * @param int $currentPage
+     * @param array $options
+     * @return mixed|object
+     * @throws BindingResolutionException
+     */
+    protected static function paginator($items, int $total, int $perPage, int $currentPage, array $options): mixed
+    {
+        return Container::getInstance()->makeWith(LengthAwarePaginator::class, compact(
+            'items',
+            'total',
+            'perPage',
+            'currentPage',
+            'options'
+        ));
+    }
+}
