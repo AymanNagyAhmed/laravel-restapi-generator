@@ -10,7 +10,7 @@
         "laravelrest restapi generator",
         "laravelrest"
     ],
-    "description": "A laravel package to generate Restful API with Requestes & Resources",
+    "description": "A laravel package to generate Restful API with Requests & Resources",
     "type": "library",
     "license": "MIT",
     "authors": [
