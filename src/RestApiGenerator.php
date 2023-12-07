@@ -44,7 +44,6 @@ class RestApiGenerator
             mkdir(base_path('app/Http/Resources'));
         }
         if (!file_exists(base_path('app/Http/Requests/Api'))) {
-            mkdir(base_path('app/Http/Requests'));
             mkdir(base_path('app/Http/Requests/Api'));
         }
 
