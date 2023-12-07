@@ -30,7 +30,7 @@ class {{modelName}}Controller extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $result = Country::query()->get();
+        $result = {{modelName}}::query()->get();
         return $this->responseSuccess(CollectionHelper::resourcePaginate($result, {{modelName}}Resource::class, 5));
     }
 

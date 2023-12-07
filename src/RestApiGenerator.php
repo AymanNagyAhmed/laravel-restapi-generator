@@ -46,7 +46,6 @@ class RestApiGenerator
         if (!file_exists(base_path('app/Http/Requests/Api'))) {
             mkdir(base_path('app/Http/Requests/Api'));
         }
-
     }
 
     public function generateCollectionHelper(): bool
@@ -198,7 +197,6 @@ class RestApiGenerator
             file_put_contents(base_path('app/Http/Resources/' . $this->model . 'Collection.php'), $template);
             $this->result = true;
         }
-
         return $this->result;
     }
 
@@ -207,13 +205,21 @@ class RestApiGenerator
         $this->result = false;
         if (floatval(app()->version()) >= 8) {
             $nameSpace = "\nuse App\Http\Controllers\Api\{{modelName}}Controller;";
-            $template = "Route::apiResource('{{modelNameLower}}', {{modelName}}Controller::class);\n";
+            $template = "Route::prefix('{{modelNameLower}}')->group(function () {\n";
+            $template .= "    Route::get('/', [{{modelName}}Controller::class, 'index']);\n";
+            $template .= "    Route::post('/', [{{modelName}}Controller::class, 'store']);\n";
+            $template .= "    Route::get('/{{{routeParam}}}', [{{modelName}}Controller::class, 'show']);\n";
+            $template .= "    Route::put('/{{{routeParam}}}', [{{modelName}}Controller::class, 'update']);\n";
+            $template .= "    Route::delete('/{{{routeParam}}}', [{{modelName}}Controller::class, 'destroy']);\n";
+            $template .= "});\n";
             $nameSpace = str_replace('{{modelName}}', $this->model, $nameSpace);
         } else {
             $template = "Route::apiResource('{{modelNameLower}}', 'Api\{{modelName}}Controller');\n";
         }
         $route = str_replace('{{modelNameLower}}', Str::camel(Str::plural($this->model)), $template);
         $route = str_replace('{{modelName}}', $this->model, $route);
+        $route = str_replace('{{routeParam}}', Str::camel(strtolower($this->model)), $route);
+
         if (!strpos(file_get_contents(base_path('routes/api.php')), $route)) {
             file_put_contents(base_path('routes/api.php'), $route, FILE_APPEND);
             if (floatval(app()->version()) >= 8) {
